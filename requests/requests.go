@@ -14,8 +14,11 @@ type SensorReading struct {
 
 //Reading ... process sensor data input
 func Reading(w http.ResponseWriter, r *http.Request) {
+	log.Println("Request Received: ")
+
 	defer r.Body.Close()
 	if r.Method != "POST" {
+		log.Println("Method not POST")
 		w.Header().Set("Allow", "POST")
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -29,7 +32,9 @@ func Reading(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
+	data, err := json.Marshal(&message.Data)
+
 	log.Println(message.Sensor)
 	log.Println(message.Topic)
-	log.Println(message.Data)
+	log.Println(string(data))
 }

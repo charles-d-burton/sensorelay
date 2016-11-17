@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"sensoserver/requests"
+	"sensorelay/requests"
 
 	"github.com/hashicorp/mdns"
 )
@@ -22,7 +22,7 @@ func main() {
 
 	http.HandleFunc("/reading", requests.Reading)
 	log.Println("Listening on port ", 9898)
-	log.Fatal(http.ListenAndServe("localhost:9898", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:9898", nil))
 }
 
 // GetLocalIP returns the non loopback local IP of the host
