@@ -13,16 +13,21 @@ import (
 func main() {
 	// Setup our service export
 	host, _ := os.Hostname()
+	listener, err := net.Listen("tcp", "0.0.0.0:0")
+	if err != nil {
+		panic(err)
+	}
+	port := listener.Addr().(*net.TCPAddr).Port
 	info := []string{"My awesome service"}
-	service, _ := mdns.NewMDNSService(host, "_sensorelay._tcp", "", "", 9899, getLocalIPS(), info)
+	service, _ := mdns.NewMDNSService(host, "_sensorelay._tcp", "", "", port, getLocalIPS(), info)
 
 	// Create the mDNS server, defer shutdown
 	server, _ := mdns.NewServer(&mdns.Config{Zone: service})
 	defer server.Shutdown()
 
 	http.HandleFunc("/reading", requests.Reading)
-	log.Println("Listening on port ", 9899)
-	log.Fatal(http.ListenAndServe("0.0.0.0:9899", nil))
+	log.Println("Listening on port ", port)
+	log.Fatal(http.Serve(listener, nil))
 }
 
 // GetLocalIP returns the non loopback local IP of the host
