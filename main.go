@@ -26,6 +26,7 @@ func main() {
 	defer server.Shutdown()
 
 	http.HandleFunc("/reading", requests.Reading)
+	http.HandleFunc("/setkey", requests.SetKey)
 	log.Println("Listening on port ", port)
 	log.Fatal(http.Serve(listener, nil))
 }
